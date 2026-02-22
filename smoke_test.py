@@ -75,10 +75,11 @@ def main():
     # constructor: custom cache_dir
     with tempfile.TemporaryDirectory() as tmpdir:
         custom_sdk = MtgJsonTools(cache_dir=tmpdir)
+        actual_dir = str(custom_sdk._cache.cache_dir)
         check(
             "constructor cache_dir",
-            tmpdir in repr(custom_sdk),
-            f"repr={repr(custom_sdk)}",
+            Path(actual_dir) == Path(tmpdir),
+            f"expected={tmpdir}, actual={actual_dir}",
         )
         custom_sdk.close()
 
@@ -1913,15 +1914,13 @@ def main():
             )
             results.append(("async sql as_dataframe", hasattr(df, "shape")))
 
-            # Concurrent queries via asyncio.gather
-            r1, r2, r3 = await asyncio.gather(
-                async_sdk.run(async_sdk.inner.cards.count),
-                async_sdk.run(async_sdk.inner.sets.count),
-                async_sdk.run(async_sdk.inner.tokens.count),
-            )
+            # Sequential async queries (DuckDB in-memory is single-writer)
+            r1 = await async_sdk.run(async_sdk.inner.cards.count)
+            r2 = await async_sdk.run(async_sdk.inner.sets.count)
+            r3 = await async_sdk.run(async_sdk.inner.tokens.count)
             results.append(
                 (
-                    "async concurrent gather",
+                    "async sequential multi-query",
                     r1 > 0 and r2 > 0 and r3 > 0,
                 )
             )

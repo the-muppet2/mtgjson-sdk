@@ -1,12 +1,12 @@
-"""Test fixtures for mtgjson-sdk tests."""
+"""Test fixtures for mtg-json-tools tests."""
 
 from __future__ import annotations
 
 import pytest
 
-from mtgjson_sdk import MtgjsonSDK
-from mtgjson_sdk.cache import CacheManager
-from mtgjson_sdk.connection import Connection
+from mtg_json_tools import MtgJsonTools
+from mtg_json_tools.cache import CacheManager
+from mtg_json_tools.connection import Connection
 
 # === Sample data ===
 
@@ -581,7 +581,7 @@ def sample_db(tmp_path):
 @pytest.fixture
 def sdk_offline(tmp_path):
     """SDK instance with sample data loaded (no network)."""
-    sdk = MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True)
+    sdk = MtgJsonTools(cache_dir=tmp_path / "cache", offline=True)
 
     # Load sample data directly
     sdk._conn.register_table_from_data("cards", SAMPLE_CARDS)

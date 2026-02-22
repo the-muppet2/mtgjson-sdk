@@ -1,4 +1,4 @@
-"""Async wrapper for MtgjsonSDK.
+"""Async wrapper for MtgJsonTools.
 
 Runs all DuckDB queries in a thread pool executor, making it safe
 to use from async frameworks (FastAPI, Django, etc.) without blocking
@@ -13,17 +13,17 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, TypeVar
 
-from .client import MtgjsonSDK
+from .client import MtgJsonTools
 
 T = TypeVar("T")
 
 
-class AsyncMtgjsonSDK:
-    """Async wrapper around :class:`MtgjsonSDK`.
+class AsyncMtgJsonTools:
+    """Async wrapper around :class:`MtgJsonTools`.
 
     Usage::
 
-        async with AsyncMtgjsonSDK() as sdk:
+        async with AsyncMtgJsonTools() as sdk:
             cards = await sdk.run(sdk.inner.cards.search, name="Lightning%")
             result = await sdk.sql("SELECT COUNT(*) FROM cards")
     """
@@ -38,13 +38,13 @@ class AsyncMtgjsonSDK:
 
         Args:
             max_workers: Thread pool size for concurrent queries.
-            **kwargs: Forwarded to :class:`MtgjsonSDK` (cache_dir, offline, etc.).
+            **kwargs: Forwarded to :class:`MtgJsonTools` (cache_dir, offline, etc.).
         """
-        self._sdk = MtgjsonSDK(**kwargs)
+        self._sdk = MtgJsonTools(**kwargs)
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
 
     @property
-    def inner(self) -> MtgjsonSDK:
+    def inner(self) -> MtgJsonTools:
         """Access the underlying sync SDK for property access."""
         return self._sdk
 
@@ -70,7 +70,7 @@ class AsyncMtgjsonSDK:
         Args:
             query: SQL query string.
             params: Optional query parameters.
-            **kwargs: Forwarded to :meth:`MtgjsonSDK.sql` (e.g. ``as_dataframe``).
+            **kwargs: Forwarded to :meth:`MtgJsonTools.sql` (e.g. ``as_dataframe``).
 
         Returns:
             List of row dicts, or a Polars DataFrame if ``as_dataframe=True``.
@@ -82,12 +82,12 @@ class AsyncMtgjsonSDK:
         self._sdk.close()
         self._executor.shutdown(wait=False)
 
-    async def __aenter__(self) -> AsyncMtgjsonSDK:
+    async def __aenter__(self) -> AsyncMtgJsonTools:
         """Enter async context manager.
 
         Example::
 
-            async with AsyncMtgjsonSDK() as sdk:
+            async with AsyncMtgJsonTools() as sdk:
                 cards = await sdk.run(sdk.inner.cards.search, name="Bolt%")
         """
         return self

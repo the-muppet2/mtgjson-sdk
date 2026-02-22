@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/mtgjson-sdk
+      url: https://pypi.org/p/mtg-json-tools
     permissions:
       id-token: write
     steps:
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/mtgjson-sdk
+      url: https://test.pypi.org/p/mtg-json-tools
     permissions:
       id-token: write
     steps:

@@ -2,7 +2,7 @@
 
 import pytest
 
-from mtgjson_sdk.models.sets import SetList
+from mtg_json_tools.models.sets import SetList
 
 # Price data matching SAMPLE_CARDS (card-uuid-001 in A25, card-uuid-002 in MH2)
 _SET_PRICE_DATA = [

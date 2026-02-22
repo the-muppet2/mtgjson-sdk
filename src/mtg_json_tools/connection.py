@@ -9,7 +9,7 @@ import duckdb
 
 from .cache import CacheManager
 
-logger = logging.getLogger("mtgjson_sdk")
+logger = logging.getLogger("mtg_json_tools")
 
 # Known list columns that don't follow the plural naming convention
 # (e.g. colorIdentity, availability, producedMana). Always converted
@@ -442,7 +442,7 @@ class Connection:
         except ImportError as err:
             raise ImportError(
                 "polars is required for DataFrame output. "
-                "Install with: pip install mtgjson-sdk[polars]"
+                "Install with: pip install mtg-json-tools[polars]"
             ) from err
         if params:
             result = self._conn.execute(sql, params)

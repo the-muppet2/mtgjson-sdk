@@ -1,6 +1,6 @@
 """Tests for the booster simulator."""
 
-from mtgjson_sdk.booster.simulator import _pick_from_sheet, _pick_pack
+from mtg_json_tools.booster.simulator import _pick_from_sheet, _pick_pack
 
 
 def test_pick_pack_weighted():

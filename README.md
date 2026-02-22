@@ -1,8 +1,8 @@
-# mtgjson-sdk
+# mtg-json-tools
 
-[![PyPI](https://img.shields.io/pypi/v/mtgjson-sdk)](https://pypi.org/project/mtgjson-sdk/)
-[![Python](https://img.shields.io/pypi/pyversions/mtgjson-sdk)](https://pypi.org/project/mtgjson-sdk/)
-[![License](https://img.shields.io/github/license/the-muppet2/mtgjson-sdk)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/mtg-json-tools)](https://pypi.org/project/mtg-json-tools/)
+[![Python](https://img.shields.io/pypi/pyversions/mtg-json-tools)](https://pypi.org/project/mtg-json-tools/)
+[![License](https://img.shields.io/github/license/the-muppet2/mtg-json-tools)](LICENSE)
 
 A DuckDB-backed Python query client for [MTGJSON](https://mtgjson.com) card data. Auto-downloads Parquet data from the MTGJSON CDN and exposes the full Magic: The Gathering dataset through an ergonomic, fully-typed Python API.
 
@@ -12,7 +12,7 @@ A DuckDB-backed Python query client for [MTGJSON](https://mtgjson.com) card data
 - **10+ query modules** -- cards, sets, prices, legalities, identifiers, tokens, decks, sealed products, SKUs, enums
 - **Booster pack simulation** -- weighted random draft/collector pack opening
 - **3 output modes** -- Pydantic models, Python dicts, or Polars DataFrames
-- **Async support** -- `AsyncMtgjsonSDK` for FastAPI, Django, and other async frameworks
+- **Async support** -- `AsyncMtgJsonTools` for FastAPI, Django, and other async frameworks
 - **DuckDB export** -- export the full database to a standalone `.duckdb` file
 - **Auto-refresh** -- detect new MTGJSON releases in long-running services
 - **Offline mode** -- use cached files without network access
@@ -23,22 +23,22 @@ A DuckDB-backed Python query client for [MTGJSON](https://mtgjson.com) card data
 ## Install
 
 ```bash
-pip install mtgjson-sdk
+pip install mtg-json-tools
 ```
 
 Optional extras:
 
 ```bash
-pip install mtgjson-sdk[polars]   # DataFrame support
-pip install mtgjson-sdk[all]      # polars + orjson
+pip install mtg-json-tools[polars]   # DataFrame support
+pip install mtg-json-tools[all]      # polars + orjson
 ```
 
 ## Quick Start
 
 ```python
-from mtgjson_sdk import MtgjsonSDK
+from mtg_json_tools import MtgJsonTools
 
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Search for cards
     bolts = sdk.cards.search(name="Lightning Bolt")
     print(f"Found {len(bolts)} printings of Lightning Bolt")
@@ -65,7 +65,7 @@ with MtgjsonSDK() as sdk:
 ### Price Tracking
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Find the cheapest printing of any card
     cheapest = sdk.prices.cheapest_printing("Ragavan, Nimble Pilferer")
 
@@ -91,7 +91,7 @@ with MtgjsonSDK() as sdk:
 ### Deck Building Helper
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Find modern-legal red creatures with CMC <= 2
     aggro_creatures = sdk.cards.search(
         colors=["R"],
@@ -118,7 +118,7 @@ with MtgjsonSDK() as sdk:
 ### Collection Management
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Cross-reference by Scryfall ID
     cards = sdk.identifiers.find_by_scryfall_id("f7a21fe4-...")
 
@@ -136,13 +136,13 @@ with MtgjsonSDK() as sdk:
 ### Discord Bot / Web API
 
 ```python
-from mtgjson_sdk import AsyncMtgjsonSDK
+from mtg_json_tools import AsyncMtgJsonTools
 
 # FastAPI example
 from fastapi import FastAPI
 
 app = FastAPI()
-sdk = AsyncMtgjsonSDK()
+sdk = AsyncMtgJsonTools()
 
 @app.get("/card/{name}")
 async def get_card(name: str):
@@ -164,7 +164,7 @@ async def shutdown():
 ### Booster Pack Simulation
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # See what booster types are available
     types = sdk.booster.available_types("MH3")  # ["draft", "collector", ...]
 
@@ -335,12 +335,12 @@ sdk.close()                                # release resources
 
 ### Async Support
 
-`AsyncMtgjsonSDK` wraps the sync client in a thread pool executor, making it safe to use from async frameworks without blocking the event loop. DuckDB releases the GIL during query execution, so thread pool concurrency works well.
+`AsyncMtgJsonTools` wraps the sync client in a thread pool executor, making it safe to use from async frameworks without blocking the event loop. DuckDB releases the GIL during query execution, so thread pool concurrency works well.
 
 ```python
-from mtgjson_sdk import AsyncMtgjsonSDK
+from mtg_json_tools import AsyncMtgJsonTools
 
-async with AsyncMtgjsonSDK(max_workers=4) as sdk:
+async with AsyncMtgJsonTools(max_workers=4) as sdk:
     # Run any sync method asynchronously
     cards = await sdk.run(sdk.inner.cards.search, name="Lightning%")
     sets = await sdk.run(sdk.inner.sets.list, set_type="masters")
@@ -351,12 +351,12 @@ async with AsyncMtgjsonSDK(max_workers=4) as sdk:
 
 ### DataFrame Output
 
-Every query method supports `as_dataframe=True` to return a Polars DataFrame (requires `pip install mtgjson-sdk[polars]`):
+Every query method supports `as_dataframe=True` to return a Polars DataFrame (requires `pip install mtg-json-tools[polars]`):
 
 ```python
 import polars as pl
 
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Get a DataFrame of all Modern-legal creatures
     df = sdk.cards.search(legal_in="modern", types="Creature", limit=5000, as_dataframe=True)
 
@@ -375,7 +375,7 @@ with MtgjsonSDK() as sdk:
 Export all loaded data to a standalone DuckDB file that can be queried without the SDK:
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Touch the query modules you want exported
     _ = sdk.cards.count()
     _ = sdk.sets.count()
@@ -392,7 +392,7 @@ with MtgjsonSDK() as sdk:
 The `refresh()` method checks the CDN for new MTGJSON releases. If a newer version is available, it clears internal state so the next query re-downloads fresh data:
 
 ```python
-sdk = MtgjsonSDK()
+sdk = MtgJsonTools()
 
 # In a scheduled task or health check:
 if sdk.refresh():
@@ -408,7 +408,7 @@ def on_progress(filename: str, downloaded: int, total: int):
     pct = (downloaded / total * 100) if total else 0
     print(f"\r{filename}: {pct:.1f}%", end="", flush=True)
 
-sdk = MtgjsonSDK(
+sdk = MtgJsonTools(
     cache_dir=Path("/data/mtgjson-cache"),
     timeout=300.0,
     on_progress=on_progress,
@@ -420,7 +420,7 @@ sdk = MtgjsonSDK(
 All user input goes through DuckDB parameter binding (`$1`, `$2`, ...) to prevent SQL injection:
 
 ```python
-with MtgjsonSDK() as sdk:
+with MtgJsonTools() as sdk:
     # Ensure views are registered before querying
     _ = sdk.cards.count()
 
@@ -460,7 +460,7 @@ Typed Python API (Pydantic models / dicts / Polars DataFrames)
 
 **How it works:**
 
-1. **Auto-download**: On first use, the SDK downloads ~15 Parquet files and ~7 JSON files from the MTGJSON CDN to a platform-specific cache directory (`~/.cache/mtgjson-sdk` on Linux, `~/Library/Caches/mtgjson-sdk` on macOS, `AppData/Local/mtgjson-sdk` on Windows).
+1. **Auto-download**: On first use, the SDK downloads ~15 Parquet files and ~7 JSON files from the MTGJSON CDN to a platform-specific cache directory (`~/.cache/mtg-json-tools` on Linux, `~/Library/Caches/mtg-json-tools` on macOS, `AppData/Local/mtg-json-tools` on Windows).
 
 2. **Lazy loading**: DuckDB views are registered on-demand -- accessing `sdk.cards` triggers the cards view, `sdk.prices` triggers price data loading, etc. Only the data you use gets loaded into memory.
 
@@ -480,8 +480,8 @@ Typed Python API (Pydantic models / dicts / Polars DataFrames)
 ### Setup
 
 ```bash
-git clone https://github.com/the-muppet2/mtgjson-sdk.git
-cd mtgjson-sdk
+git clone https://github.com/the-muppet2/mtg-json-tools.git
+cd mtg-json-tools
 uv sync --group dev
 ```
 

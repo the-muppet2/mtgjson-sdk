@@ -11,7 +11,7 @@ import time
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("smoke_test")
 
-from mtgjson_sdk import MtgjsonSDK
+from mtg_json_tools import MtgJsonTools
 
 PASS = 0
 FAIL = 0
@@ -51,13 +51,13 @@ def main():
     section("Client Lifecycle")
 
     # __repr__
-    sdk = MtgjsonSDK()
+    sdk = MtgJsonTools()
     r = repr(sdk)
-    check("__repr__", "MtgjsonSDK" in r, f"repr={r}")
+    check("__repr__", "MtgJsonTools" in r, f"repr={r}")
 
     # context manager
-    with MtgjsonSDK() as ctx_sdk:
-        check("__enter__ returns SDK", isinstance(ctx_sdk, MtgjsonSDK))
+    with MtgJsonTools() as ctx_sdk:
+        check("__enter__ returns SDK", isinstance(ctx_sdk, MtgJsonTools))
     check("__exit__ (no error)", True, "context manager closed cleanly")
 
     # meta property

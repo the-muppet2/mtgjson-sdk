@@ -14,8 +14,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from mtgjson_sdk.cache import CacheManager
-from mtgjson_sdk.connection import Connection
+from mtg_json_tools.cache import CacheManager
+from mtg_json_tools.connection import Connection
 
 
 @pytest.fixture

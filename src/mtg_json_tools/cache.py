@@ -12,7 +12,7 @@ import httpx
 
 from .config import CDN_BASE, JSON_FILES, META_URL, PARQUET_FILES, default_cache_dir
 
-logger = logging.getLogger("mtgjson_sdk")
+logger = logging.getLogger("mtg_json_tools")
 
 
 class CacheManager:

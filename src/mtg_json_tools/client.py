@@ -1,4 +1,4 @@
-"""MtgjsonSDK main entry point."""
+"""MtgJsonTools main entry point."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from .queries.skus import SkuQuery
 from .queries.tokens import TokenQuery
 
 
-class MtgjsonSDK:
+class MtgJsonTools:
     """Query client for MTGJSON card data.
 
     Auto-downloads Parquet data from the MTGJSON CDN and provides a typed,
@@ -28,7 +28,7 @@ class MtgjsonSDK:
 
     Usage::
 
-        sdk = MtgjsonSDK()
+        sdk = MtgJsonTools()
 
         # Cards
         card = sdk.cards.get_by_uuid("abc-123")
@@ -343,12 +343,12 @@ class MtgjsonSDK:
         self._conn.close()
         self._cache.close()
 
-    def __enter__(self) -> MtgjsonSDK:
+    def __enter__(self) -> MtgJsonTools:
         """Enter context manager.
 
         Example::
 
-            with MtgjsonSDK() as sdk:
+            with MtgJsonTools() as sdk:
                 cards = sdk.cards.search(name="Lightning Bolt")
         """
         return self
@@ -358,4 +358,4 @@ class MtgjsonSDK:
         self.close()
 
     def __repr__(self) -> str:
-        return f"MtgjsonSDK(cache_dir={self._cache.cache_dir!r})"
+        return f"MtgJsonTools(cache_dir={self._cache.cache_dir!r})"

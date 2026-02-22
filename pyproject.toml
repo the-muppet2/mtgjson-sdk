@@ -3,14 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mtgjson-sdk"
+name = "mtg-json-tools"
 version = "0.1.0"
-description = "DuckDB-backed query client for MTGJSON card data"
+description = "Query client for MTGJSON card data"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Robert Pratt" }]
-keywords = ["mtg", "magic-the-gathering", "mtgjson", "cards", "sdk", "duckdb"]
+keywords = ["mtg", "magic-the-gathering", "cards", "sdk", "duckdb"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -29,8 +29,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://mtgjson.com"
-Repository = "https://github.com/the-muppet2/mtgjson-sdk"
+Repository = "https://github.com/the-muppet2/mtg-json-tools"
 
 [project.optional-dependencies]
 polars = ["polars>=1.0"]
@@ -45,7 +44,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mtgjson_sdk"]
+packages = ["src/mtg_json_tools"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -59,4 +58,4 @@ src = ["src", "tests"]
 select = ["E", "F", "I", "UP"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["mtgjson_sdk"]
+known-first-party = ["mtg_json_tools"]

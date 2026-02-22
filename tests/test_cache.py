@@ -2,7 +2,7 @@
 
 import pytest
 
-from mtgjson_sdk.cache import CacheManager
+from mtg_json_tools.cache import CacheManager
 
 
 def test_cache_dir_created(tmp_path):

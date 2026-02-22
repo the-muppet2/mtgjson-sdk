@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from mtgjson_sdk.queries.prices import PriceQuery, _stream_flatten_prices
+from mtg_json_tools.queries.prices import PriceQuery, _stream_flatten_prices
 
 # === _stream_flatten_prices unit tests ===
 

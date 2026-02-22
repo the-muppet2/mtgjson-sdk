@@ -3,7 +3,7 @@
 import duckdb
 import pytest
 
-from mtgjson_sdk._sql import SQLBuilder
+from mtg_json_tools._sql import SQLBuilder
 
 
 def test_basic_select():

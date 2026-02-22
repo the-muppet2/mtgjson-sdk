@@ -1,17 +1,17 @@
-"""Tests for the MtgjsonSDK client."""
+"""Tests for the MtgJsonTools client."""
 
 import duckdb
 import pytest
 
-from mtgjson_sdk import AsyncMtgjsonSDK, MtgjsonSDK
+from mtg_json_tools import AsyncMtgJsonTools, MtgJsonTools
 
 
 def test_sdk_repr(sdk_offline):
-    assert "MtgjsonSDK" in repr(sdk_offline)
+    assert "MtgJsonTools" in repr(sdk_offline)
 
 
 def test_context_manager(tmp_path):
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         assert sdk is not None
 
 
@@ -39,7 +39,7 @@ def test_refresh_not_stale(sdk_offline):
 
 def test_refresh_clears_state(tmp_path):
     """refresh() resets views and lazy query objects when stale."""
-    sdk = MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True)
+    sdk = MtgJsonTools(cache_dir=tmp_path / "cache", offline=True)
     sdk._conn.register_table_from_data(
         "cards",
         [
@@ -181,13 +181,13 @@ def test_export_db_contains_all_views(sdk_offline, tmp_path):
         conn.close()
 
 
-# === AsyncMtgjsonSDK tests ===
+# === AsyncMtgJsonTools tests ===
 
 
 @pytest.mark.asyncio
 async def test_async_sdk_sql(tmp_path):
-    """AsyncMtgjsonSDK.sql runs queries without blocking."""
-    async with AsyncMtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    """AsyncMtgJsonTools.sql runs queries without blocking."""
+    async with AsyncMtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         from conftest import SAMPLE_CARDS
 
         sdk.inner._conn.register_table_from_data("cards", SAMPLE_CARDS)
@@ -197,8 +197,8 @@ async def test_async_sdk_sql(tmp_path):
 
 @pytest.mark.asyncio
 async def test_async_sdk_run(tmp_path):
-    """AsyncMtgjsonSDK.run wraps sync query methods."""
-    async with AsyncMtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    """AsyncMtgJsonTools.run wraps sync query methods."""
+    async with AsyncMtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         from conftest import SAMPLE_CARDS
 
         sdk.inner._conn.register_table_from_data("cards", SAMPLE_CARDS)
@@ -212,7 +212,7 @@ async def test_async_sdk_run(tmp_path):
 def test_on_progress_callback(tmp_path):
     """on_progress parameter is accepted and stored."""
     calls = []
-    sdk = MtgjsonSDK(
+    sdk = MtgJsonTools(
         cache_dir=tmp_path / "cache",
         offline=True,
         on_progress=lambda f, d, t: calls.append((f, d, t)),
@@ -229,7 +229,7 @@ def test_execute_models_returns_pydantic_instances(sdk_offline):
     """execute_models returns proper Pydantic model instances."""
     from pydantic import TypeAdapter
 
-    from mtgjson_sdk.models.cards import CardSet
+    from mtg_json_tools.models.cards import CardSet
 
     adapter = TypeAdapter(list[CardSet])
     cards = sdk_offline._conn.execute_models(
@@ -245,26 +245,26 @@ def test_execute_models_returns_pydantic_instances(sdk_offline):
 
 def test_sql_works_without_views(tmp_path):
     """Raw SQL works even with no views registered."""
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         rows = sdk.sql("SELECT 1 AS x")
         assert rows == [{"x": 1}]
 
 
 def test_meta_returns_empty_when_missing(tmp_path):
     """meta property returns {} when Meta.json is not cached."""
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         assert sdk.meta == {}
 
 
 def test_views_empty_initially(tmp_path):
     """views property returns [] with no data loaded."""
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         assert sdk.views == []
 
 
 def test_export_db_no_views(tmp_path):
     """export_db with no views creates a valid empty DuckDB file."""
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         out = tmp_path / "empty.duckdb"
         result = sdk.export_db(out)
         assert result == out
@@ -283,7 +283,7 @@ def test_export_db_no_views(tmp_path):
 
 def test_refresh_stale_with_no_version(tmp_path):
     """refresh() returns True when no version.txt exists (stale)."""
-    with MtgjsonSDK(cache_dir=tmp_path / "cache", offline=True) as sdk:
+    with MtgJsonTools(cache_dir=tmp_path / "cache", offline=True) as sdk:
         # No version.txt → is_stale() returns True
         result = sdk.refresh()
         assert result is True

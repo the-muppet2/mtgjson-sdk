@@ -53,9 +53,9 @@ def default_cache_dir() -> Path:
     """Platform-appropriate cache directory.
 
     Returns:
-        ``~/AppData/Local/mtgjson-sdk`` on Windows,
-        ``~/Library/Caches/mtgjson-sdk`` on macOS,
-        ``~/.cache/mtgjson-sdk`` on Linux.
+        ``~/AppData/Local/mtg-json-tools`` on Windows,
+        ``~/Library/Caches/mtg-json-tools`` on macOS,
+        ``~/.cache/mtg-json-tools`` on Linux.
     """
     system = platform.system()
     if system == "Windows":
@@ -64,4 +64,4 @@ def default_cache_dir() -> Path:
         base = Path.home() / "Library" / "Caches"
     else:
         base = Path.home() / ".cache"
-    return base / "mtgjson-sdk"
+    return base / "mtg-json-tools"

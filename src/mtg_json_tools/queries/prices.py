@@ -12,7 +12,7 @@ from typing import Any
 from ..cache import CacheManager
 from ..connection import Connection
 
-logger = logging.getLogger("mtgjson_sdk")
+logger = logging.getLogger("mtg_json_tools")
 
 
 class PriceQuery:

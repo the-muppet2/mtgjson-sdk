@@ -12,7 +12,7 @@ from ..cache import CacheManager
 from ..connection import Connection
 from ..models.submodels import TcgplayerSkus
 
-logger = logging.getLogger("mtgjson_sdk")
+logger = logging.getLogger("mtg_json_tools")
 
 
 class SkuQuery:

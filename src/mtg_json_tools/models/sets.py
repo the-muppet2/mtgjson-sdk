@@ -36,8 +36,8 @@ class DeckSet(BaseModel):
 class SetList(BaseModel):
     """Set summary metadata (without individual cards).
 
-    Used by :meth:`~mtgjson_sdk.queries.sets.SetQuery.get` and
-    :meth:`~mtgjson_sdk.queries.sets.SetQuery.list`. Contains set code,
+    Used by :meth:`~mtg_json_tools.queries.sets.SetQuery.get` and
+    :meth:`~mtg_json_tools.queries.sets.SetQuery.list`. Contains set code,
     name, type, release date, sizes, and marketplace IDs.
     """
 

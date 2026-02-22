@@ -1,6 +1,6 @@
 """Tests for card queries."""
 
-from mtgjson_sdk.models.cards import CardSet
+from mtg_json_tools.models.cards import CardSet
 
 
 def test_get_by_uuid(sdk_offline):

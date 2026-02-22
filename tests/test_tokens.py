@@ -1,6 +1,6 @@
 """Tests for the token query module."""
 
-from mtgjson_sdk.models.cards import CardToken
+from mtg_json_tools.models.cards import CardToken
 
 
 def test_token_get_by_uuid(sdk_offline):

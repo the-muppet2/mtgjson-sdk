@@ -4,4 +4,4 @@ from .async_client import AsyncMtgJsonTools
 from .client import MtgJsonTools
 
 __all__ = ["AsyncMtgJsonTools", "MtgJsonTools"]
-__version__ = "0.1.0"
+__version__ = "0.1.1"

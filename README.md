@@ -18,7 +18,6 @@ A DuckDB-backed Python query client for [MTGJSON](https://mtgjson.com) card data
 - **Offline mode** -- use cached files without network access
 - **Fuzzy search** -- typo-tolerant name matching via Jaro-Winkler similarity
 - **Localized search** -- find cards by foreign-language names
-- **Progress callbacks** -- integrate with tqdm or custom progress bars during downloads
 
 ## Install
 
